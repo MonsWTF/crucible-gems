@@ -245,7 +245,7 @@ int main( int inNumArgs, char **inArgs ) {
                 "outIncremental.dbz [outFull.dbz]\n\n" );
         printf( "If outFull.dbz not supplied, only the incremental bundle is "
                 "generated.\n\n" );
-		return 1;
+		return 2;
 		}
     
     File dirOld( NULL, inArgs[1] );
@@ -253,7 +253,7 @@ int main( int inNumArgs, char **inArgs ) {
     if( ! dirOld.exists() || ! dirOld.isDirectory() ) {
         printf( "Directory %s not found\n", inArgs[1] );
         
-        return 0;
+        return 1;
         }
     
     File dirNew( NULL, inArgs[2] );
@@ -261,7 +261,7 @@ int main( int inNumArgs, char **inArgs ) {
     if( ! dirNew.exists() || ! dirNew.isDirectory() ) {
         printf( "Directory %s not found\n", inArgs[2] );
         
-        return 0;
+        return 1;
         }
 
     //File outIncFile( NULL, inArgs[3] );
@@ -500,5 +500,5 @@ int main( int inNumArgs, char **inArgs ) {
     
 
     
-    return 1;
+    return 0;
     }
