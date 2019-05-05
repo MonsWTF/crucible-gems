@@ -10,6 +10,9 @@
 #import "SDLMain_Ext.h"
 #import <sys/param.h> /* for MAXPATHLEN */
 #import <unistd.h>
+#import <dirent.h>
+#import <errno.h>
+
 
 /* Apparently when you use NSBorderlessWindowMask (as SDL's Quartz driver does)
    it becomes impossible to change the cursor. Forcing canBecomeKeyWindow
@@ -108,20 +111,27 @@ static NSString *getApplicationName(void)
 {
     if (shouldChdir)
     {
-        char parentdir[MAXPATHLEN];
-		CFURLRef url = CFBundleCopyBundleURL(CFBundleGetMainBundle());
-		CFURLRef url2 = CFURLCreateCopyDeletingLastPathComponent(0, url);
-		if (CFURLGetFileSystemRepresentation(url2, true, (UInt8 *)parentdir, MAXPATHLEN)) {
-	        assert ( chdir (parentdir) == 0 );   /* chdir to the binary app's
-                                                  * parent */
-            printf( "If you're running this from the command line, "
-                    "the working directory is being overridden and set "
-                    "to %s\n\n", parentdir );
-		}
-		CFRelease(url);
-		CFRelease(url2);
-	}
-
+        DIR* dir = opendir("languages");
+        if (dir)
+        {
+            closedir(dir);
+        }
+        else if (ENOENT == errno)
+        {
+            char parentdir[MAXPATHLEN];
+            CFURLRef url = CFBundleCopyBundleURL(CFBundleGetMainBundle());
+            CFURLRef url2 = CFURLCreateCopyDeletingLastPathComponent(0, url);
+            if (CFURLGetFileSystemRepresentation(url2, true, (UInt8 *)parentdir, MAXPATHLEN)) {
+                assert ( chdir (parentdir) == 0 );   /* chdir to the binary app's
+                                                    * parent */
+                printf( "If you're running this from the command line, "
+                        "the working directory is being overridden and set "
+                        "to %s\n\n", parentdir );
+            }
+            CFRelease(url);
+            CFRelease(url2);
+        }
+    }
 }
 
 #if SDL_USE_NIB_FILE
