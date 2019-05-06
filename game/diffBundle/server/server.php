@@ -206,6 +206,8 @@ function dbs_isUpdateAvailable() {
 
 
 function dbs_getUpdate() {
+    global $downloadFilePath;
+    
     $platform = dbs_getPlatform();
     $oldVersion = dbs_getOldVersion();
     
@@ -232,8 +234,6 @@ function dbs_getUpdate() {
             $updateName = "$latest"."_full_all".".dbz";
             }
         }
-    
-    global $downloadFilePath;
 
     
     $result = dbs_send_file( $downloadFilePath . $updateName );
